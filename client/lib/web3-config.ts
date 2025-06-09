@@ -17,7 +17,7 @@ export const coreTestnet2 = {
   },
   blockExplorers: {
     default: {
-      name: 'Core Testnet2 Explorer',
+      name: 'Core Testnet2 Explorer', 
       url: 'https://scan.test2.btcs.network',
     },
   },
@@ -49,10 +49,10 @@ export const modal = createAppKit({
   networks: [coreTestnet2],
   defaultNetwork: coreTestnet2,
   metadata: {
-    name: 'CoreWill',
-    description: 'Wallet inheritance made simple',
-    url: 'https://core-will.vercel.app/',
-    icons: ['https://avatars.githubusercontent.com/u/37784886']
+    name: 'GIFTCORE',
+    description: '',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://default.url',
+    icons: ["https://assets.reown.com/reown-profile-pic.png"]
   },
   features: {
     analytics: true,
