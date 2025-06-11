@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils"
 
 export default function SwapInterface() {
   const [sellAmount, setSellAmount] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [emailError, setEmailError] = useState<string>("")
+  
   const { address } = useAccount()
   const {data, isError, isLoading, error}= useBalance({
     address : address,
@@ -35,6 +38,24 @@ export default function SwapInterface() {
     change24h: corePrice?.price_change_percentage_24h || 0,
   }
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setEmail(value)
+    
+    if (value === "") {
+      setEmailError("")
+    } else if (!validateEmail(value)) {
+      setEmailError("Please enter a valid email address")
+    } else {
+      setEmailError("")
+    }
+  }
+
   const calculateUSDValue = () => {
     if (!sellAmount || !corePrice?.current_price) return "0.00"
     const amount = Number.parseFloat(sellAmount)
@@ -51,6 +72,15 @@ export default function SwapInterface() {
 
   const handleMaxClick = () => {
     setSellAmount(coreToken.balance)
+  }
+
+  const isFormValid = () => {
+    return sellAmount && 
+           email && 
+           !emailError && 
+           validateEmail(email) && 
+           !priceLoading && 
+           !priceError
   }
 
   return (
@@ -72,7 +102,7 @@ export default function SwapInterface() {
 
             <div className="flex items-center gap-4">
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl h-14 pl-4 pr-5 flex items-center gap-3">
-                <img src= {coreToken.icon} className="w-8 h-8 rounded-full" alt={coreToken.name} />
+                <img src={coreToken.icon} className="w-8 h-8 rounded-full" alt={coreToken.name} />
                 <span className="text-xl font-semibold">{coreToken.symbol}</span>
               </div>
 
@@ -144,16 +174,72 @@ export default function SwapInterface() {
             </div>
           </div>
 
+          {/* Email Input Section */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-lg text-white/70">📧</span>
+                <span className="text-lg font-medium">Email Address</span>
+              </div>
+              
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="Enter your email address"
+                  className={cn(
+                    "w-full bg-white/10 backdrop-blur-sm border rounded-xl px-4 py-3 text-lg focus:outline-none focus:ring-2 transition-all duration-200",
+                    emailError 
+                      ? "border-red-400 focus:ring-red-400/50" 
+                      : email && !emailError 
+                        ? "border-[#00d4aa] focus:ring-[#00d4aa]/50" 
+                        : "border-white/20 focus:ring-white/30"
+                  )}
+                />
+                
+                {emailError && (
+                  <div className="flex items-center gap-2 text-red-400 text-sm">
+                    <span>⚠️</span>
+                    <span>{emailError}</span>
+                  </div>
+                )}
+                
+                {email && !emailError && validateEmail(email) && (
+                  <div className="flex items-center gap-2 text-[#00d4aa] text-sm">
+                    <span>✅</span>
+                    <span>Valid email address</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="text-sm text-white/50">
+                Your gift card will be sent to this email address after payment confirmation.
+              </div>
+            </div>
+          </div>
+
           <Button
             className={cn(
               "w-full py-8 text-xl font-semibold rounded-2xl transition-all duration-300",
-              sellAmount && !priceLoading && !priceError
+              isFormValid()
                 ? "bg-[#00d4aa] hover:bg-[#00f4c4] text-black shadow-lg shadow-[#00d4aa]/25"
                 : "bg-white/10 text-white/50 cursor-not-allowed border border-white/20",
             )}
-            disabled={!sellAmount || priceLoading || !!priceError}
+            disabled={!isFormValid()}
           >
-            {priceLoading ? "Loading Price..." : priceError ? "Price Error - Try Again" : "Buy Now"}
+            {priceLoading 
+              ? "Loading Price..." 
+              : priceError 
+                ? "Price Error - Try Again" 
+                : !sellAmount 
+                  ? "Enter Amount" 
+                  : !email 
+                    ? "Enter Email Address"
+                    : emailError
+                      ? "Fix Email Address"
+                      : "Buy Now"
+            }
           </Button>
 
           {corePrice?.last_updated && (
