@@ -15,26 +15,20 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
               <span className="text-white/80 text-sm">
-                Introducing Spectrum: Intelligent authenticators
+                Service live now!
               </span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              The gateway to
+              Swap your Core for
               <br />
-              <span className="italic font-light">secure</span> applications
+              <span className="italic font-light">Real</span> Money
             </h1>
 
             <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed">
-              With a few lines of code you can integrate any app within any
-              language, and any framework.
+              Buy gift cards for top e-commerce platforms with you Core coins.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <Button className="bg-white text-black hover:bg-white/90 px-8 py-3 rounded-full font-medium">
-                Get started
-              </Button>
-            </div>
           </div>
           <SwapInterface />
         </div>

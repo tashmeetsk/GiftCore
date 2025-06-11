@@ -13,8 +13,8 @@ type GiftCard = {
 }
 
 const giftCardList: GiftCard[] = [
-  { name: "AMAZON", displayName: "Amazon Gift Card", icon: "/amazon.png" },
-  { name: "FLIPKART", displayName: "Flipkart Gift Card", icon: "/flipkart.png" },
+  { name: "AMAZON", displayName: "Amazon Gift Card", icon: "/images/amazon-logo.png" },
+  { name: "FLIPKART", displayName: "Flipkart Gift Card", icon: "/images/flipkart-logo.png" },
 ]
 
 interface GiftCardSelectorProps {

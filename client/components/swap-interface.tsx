@@ -6,10 +6,18 @@ import { BackgroundGradient } from "@/components/ui/background-gradient"
 import GiftCardSelector from "@/components/gift-card-selector"
 import PriceDisplay from "@/components/price-display"
 import { useTokenPrice } from "@/hooks/use-token-price"
+import {useAccount, useBalance} from "wagmi"
 import { cn } from "@/lib/utils"
 
 export default function SwapInterface() {
   const [sellAmount, setSellAmount] = useState<string>("")
+  const { address } = useAccount()
+  const {data, isError, isLoading, error}= useBalance({
+    address : address,
+    watch: true,
+    enabled: !!address,
+  })
+
   const [selectedGiftCard, setSelectedGiftCard] = useState({
     name: "AMAZON",
     displayName: "Amazon Gift Card",
@@ -19,10 +27,10 @@ export default function SwapInterface() {
   const { price: corePrice, loading: priceLoading, error: priceError, refetch } = useTokenPrice("coredaoorg")
 
   const coreToken = {
-    symbol: "CORE",
+    symbol: data?.symbol || "CORE",
     name: "Core DAO",
-    icon: "⚡",
-    balance: "1,250.50",
+    icon: "/images/core-logo.png",
+    balance: isLoading ? "Loading..." : isError ? "Error" : data?.formatted || "0.00",
     price: corePrice?.current_price || 0,
     change24h: corePrice?.price_change_percentage_24h || 0,
   }
@@ -42,7 +50,7 @@ export default function SwapInterface() {
   }
 
   const handleMaxClick = () => {
-    setSellAmount(coreToken.balance.replace(",", ""))
+    setSellAmount(coreToken.balance)
   }
 
   return (
@@ -64,7 +72,7 @@ export default function SwapInterface() {
 
             <div className="flex items-center gap-4">
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl h-14 pl-4 pr-5 flex items-center gap-3">
-                <span className="text-3xl">{coreToken.icon}</span>
+                <img src= {coreToken.icon} className="w-8 h-8 rounded-full" alt={coreToken.name} />
                 <span className="text-xl font-semibold">{coreToken.symbol}</span>
               </div>
 

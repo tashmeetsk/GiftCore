@@ -44,7 +44,7 @@ export function useTokenPrice(tokenId: string, autoRefresh = true): UsePriceData
     fetchPrice()
 
     if (autoRefresh) {
-      const interval = setInterval(fetchPrice, 30000) // Refresh every 30 seconds
+      const interval = setInterval(fetchPrice, 30000) 
       return () => clearInterval(interval)
     }
   }, [fetchPrice, autoRefresh])
