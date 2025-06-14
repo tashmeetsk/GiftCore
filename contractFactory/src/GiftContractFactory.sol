@@ -34,18 +34,19 @@ contract GiftContractFactory is ReentrancyGuard {
         _;
     }
 
-    function createGiftContract(uint256 _amount) external whenNotPaused returns (address) {
+    function createGiftContract(address _buyer, uint256 _amount) external onlyOwner whenNotPaused returns (address) {
+        require(_buyer != address(0), "Buyer cannot be zero address");
         require(_amount > 0, "Amount must be greater than zero");
 
-        GiftContract newContract = new GiftContract(msg.sender, s_owner, _amount);
+        GiftContract newContract = new GiftContract(_buyer, s_owner, _amount);
         address contractAddress = address(newContract);
 
         deployedContracts.push(contractAddress);
         isDeployed[contractAddress] = true;
-        contractsByBuyer[msg.sender].push(contractAddress);
+        contractsByBuyer[_buyer].push(contractAddress);
         contractsByOwner[s_owner].push(contractAddress);
 
-        emit GiftContractCreated(contractAddress, s_owner, msg.sender, _amount);
+        emit GiftContractCreated(contractAddress, s_owner, _buyer, _amount);
 
         return contractAddress;
     }
