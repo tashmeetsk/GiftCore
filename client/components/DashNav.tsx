@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LogOut, Droplets } from "lucide-react";
 
 export default function Header() {
   const { open } = useAppKit();
@@ -26,6 +26,10 @@ export default function Header() {
   };
 
   const isCorrectNetwork = chain?.id === 1114;
+
+  const handleFaucetClick = () => {
+    window.open("https://scan.test2.btcs.network/faucet", "_blank");
+  };
 
   return (
     <div className=" z-20 w-full mb-4 backdrop-blur-md fixed top-0 left-0 right-0">
@@ -49,16 +53,30 @@ export default function Header() {
               </Button>
             ) : (
               <div className="flex items-center gap-2">
-                <Badge
-                  variant={isCorrectNetwork ? "default" : "destructive"}
-                  className={`hidden sm:flex px-3 py-1 rounded-full text-xs font-medium ${
-                    isCorrectNetwork
-                      ? "bg-[#00d4aa]/20 text-[#00d4aa] border border-[#00d4aa]/30"
-                      : "bg-red-500/20 text-red-400 border border-red-500/30"
-                  }`}
-                >
-                  {getChainName()}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant={isCorrectNetwork ? "default" : "destructive"}
+                    className={`hidden sm:flex px-3 py-1 rounded-full text-xs font-medium ${
+                      isCorrectNetwork
+                        ? "bg-[#00d4aa]/20 text-[#00d4aa] border border-[#00d4aa]/30"
+                        : "bg-red-500/20 text-red-400 border border-red-500/30"
+                    }`}
+                  >
+                    {getChainName()}
+                  </Badge>
+
+                  {isCorrectNetwork && (
+                    <Button
+                      onClick={handleFaucetClick}
+                      variant="outline"
+                      size="sm"
+                      className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/30 rounded-full px-3 h-8 flex items-center gap-1 transition-all duration-200 text-xs"
+                    >
+                      <Droplets className="h-3 w-3" />
+                      <span className="hidden md:inline">Faucet</span>
+                    </Button>
+                  )}
+                </div>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
